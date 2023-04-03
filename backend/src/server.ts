@@ -1,18 +1,21 @@
+import "dotenv/config";
+import mongoose from "mongoose";
+import env from "./utils/validateEnv";
+import app from "./app";
 
-import express, { Request, Response } from "express";
+const port = env.PORT;
 
-const app = express();
+mongoose
+  .connect(env.DATABASE_URI)
+  .then(() => {
+    console.log("Db connected");
 
-const port = 5000;
+    app.listen(port, () => {
+      console.log(`App is running in port: ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Error while connecting to db...", err);
 
-app.get("/", (req: Request, res: Response) => {
-
-    return res.send("Hello world!")
-
-})
-
-app.listen(port, () => {
-
-    console.log(`App is running in port: ${port}`)
-
-})
+    process.exit(1);
+  });
