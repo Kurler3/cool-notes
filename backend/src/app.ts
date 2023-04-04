@@ -6,6 +6,7 @@ import express, {
 } from "express";
 import notesRouter from "./routers/notes.router";
 import CustomError from "./utils/classes/CustomError";
+import morgan from "morgan";
 
 ////////////////////////////////
 // INIT APP ////////////////////
@@ -19,6 +20,8 @@ const app = express();
 
 // ACCEPT JSON DATA IN BODY
 app.use(express.json());
+
+app.use(morgan("dev"));
 
 ////////////////////////////////
 // SETTING ROUTERS /////////////

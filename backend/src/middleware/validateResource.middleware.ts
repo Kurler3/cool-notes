@@ -29,7 +29,9 @@ const validate = (
 
     } catch (error: unknown) {
 
-        next(error);
+        return res.status(400).json({
+            error: (error as {errors: string}).errors
+        })
         
     }
 

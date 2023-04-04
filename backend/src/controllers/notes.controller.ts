@@ -48,3 +48,29 @@ export const createNote: RequestHandler = async (
     }
 
 }
+
+// GET NOTE CONTROLLER
+export const getNote: RequestHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+    const noteId = req.params.noteId;
+    try {
+        console.log("Note id: ", noteId)
+
+        const note = await NoteModel.findById(noteId).exec();
+
+        if(!note) {
+            return res.status(404).json({
+                error: 'Note not found!'
+            })
+        }
+
+        return res.status(200).json(note);
+
+    } catch (error) {
+        next(error);
+    }
+
+}
