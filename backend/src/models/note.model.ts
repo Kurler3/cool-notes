@@ -12,7 +12,7 @@ const noteSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-type INote = InferSchemaType<typeof noteSchema>;
+export type INote = InferSchemaType<typeof noteSchema>;
 
 const NoteModel = mongoose.model<INote>("Note", noteSchema);
  
