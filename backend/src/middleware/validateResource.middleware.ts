@@ -9,6 +9,14 @@ import {
     AnyZodObject
 } from 'zod';
 
+interface IZodError {
+    code: string;
+    expected: string;
+    received: string;
+    path: string[];
+    message: string;
+}
+
 const validate = (
     schema: AnyZodObject
 ) => (
@@ -30,7 +38,7 @@ const validate = (
     } catch (error: unknown) {
 
         return res.status(400).json({
-            error: (error as {errors: string}).errors
+            errors: (error as {errors: IZodError[]}).errors.map((zodError) => zodError.message)
         })
         
     }

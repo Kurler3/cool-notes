@@ -5,9 +5,9 @@ import {
     Response,
 } from "express";
 import NoteModel from "../models/note.model";
+import createHttpError from "http-errors";
 
 // GET ALL NOTES CONTROLLER
-
 export const getAllNotes: RequestHandler = async (
     req: Request, 
     res: Response,
@@ -24,7 +24,6 @@ export const getAllNotes: RequestHandler = async (
         next(error);
     }
 }
-
 
 // CREATE NOTE CONTROLLER
 export const createNote: RequestHandler = async (
@@ -56,15 +55,16 @@ export const getNote: RequestHandler = async (
     next: NextFunction,
 ) => {
     const noteId = req.params.noteId;
+    
     try {
-        console.log("Note id: ", noteId)
 
         const note = await NoteModel.findById(noteId).exec();
-
+        
         if(!note) {
-            return res.status(404).json({
-                error: 'Note not found!'
-            })
+            throw createHttpError(
+                404,
+                "Note not found!"
+            )
         }
 
         return res.status(200).json(note);
@@ -74,3 +74,26 @@ export const getNote: RequestHandler = async (
     }
 
 }
+
+// UPDATE NOTE CONTROLLER
+export const updateNote: RequestHandler = async (
+
+) => {
+
+    const noteId = req.params.noteId;
+
+    const {
+        title,
+        text
+    } = req.body;
+
+    try {
+        
+        
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+// DELETE NOTE CONTROLLER

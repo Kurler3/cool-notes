@@ -5,8 +5,8 @@ import express, {
     Response,
 } from "express";
 import notesRouter from "./routers/notes.router";
-import CustomError from "./utils/classes/CustomError";
 import morgan from "morgan";
+import createHttpError, { isHttpError } from "http-errors";
 
 ////////////////////////////////
 // INIT APP ////////////////////
@@ -34,10 +34,7 @@ app.use("/api/notes", notesRouter);
 ////////////////////////////////
 
 app.use((req, res, next) => {
-
-    const error = new CustomError(`not found - ${req.originalUrl}`, 404);
-
-    next(error);
+    next(createHttpError(404, `Not Found - ${req.originalUrl}`));
 });
 
 ////////////////////////////////
@@ -51,8 +48,12 @@ app.use((error: unknown, req: Request, res: Response, next: NextFunction) => {
     let errorMessage = "An unknown error ocurred!";
     let statusCode = 500;
 
-    if(error instanceof Error) errorMessage = error.message;
-    if(error instanceof CustomError) statusCode = error.statusCode;
+    if(isHttpError(error)) {
+
+        errorMessage = error.message;
+        statusCode = error.statusCode;
+
+    }
 
     return res.status(statusCode).json({error: errorMessage})
 })
