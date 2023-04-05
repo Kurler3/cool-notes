@@ -4,7 +4,7 @@ import {
     string,
 } from "zod";
 
-const getNoteSchema = object({
+export const noteIdParams = {
     params: object({
         noteId: string({
             required_error: "noteId is required!"
@@ -13,6 +13,8 @@ const getNoteSchema = object({
             "noteId must be a valid id"
         )
     })
-});
+};
+
+const getNoteSchema = object(noteIdParams);
 
 export default getNoteSchema;

@@ -77,7 +77,9 @@ export const getNote: RequestHandler = async (
 
 // UPDATE NOTE CONTROLLER
 export const updateNote: RequestHandler = async (
-
+    req: Request,
+    res: Response,
+    next: NextFunction,
 ) => {
 
     const noteId = req.params.noteId;
@@ -87,9 +89,30 @@ export const updateNote: RequestHandler = async (
         text
     } = req.body;
 
+    // NEED AT LEAST 1 PARAMETER TO UPDATE
+    if(!title && !text) {
+        throw createHttpError(400, "Need to update at least one field: title or text")
+    }
+
     try {
         
-        
+        const note = await NoteModel.findById(noteId);
+
+        if(!note) {
+            throw createHttpError(404, "Note not found!");
+        }
+
+        if(title) {
+            note.title = title;
+        }
+
+        if(text) {
+            note.text = text;
+        }
+
+        const updatedNote = await note.save();
+
+        return res.status(200).json(updatedNote);
 
     } catch (error) {
         next(error);
@@ -97,3 +120,31 @@ export const updateNote: RequestHandler = async (
 }
 
 // DELETE NOTE CONTROLLER
+export const deleteNote: RequestHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
+
+    // NOTE ID
+    const noteId = req.params.noteId;
+
+    try {
+        
+        const note = await NoteModel.findById(noteId);
+
+        if(!note) {
+            throw createHttpError(404, "Note not found!");
+        }
+
+        // FIND AND DELETE NOTE
+        await note.deleteOne();
+
+        return res.status(200).json({
+            message: "Note deleted!"
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}
