@@ -15,27 +15,27 @@ const notesRouter = express.Router();
 // GET ROUTES //////////////////////
 ////////////////////////////////////
 
-notesRouter.get("/list", NotesController.getAllNotes);
+notesRouter.get("/list", NotesController.getAllNotesController);
 
-notesRouter.get("/get/:noteId", validate(getDeleteNoteSchema), NotesController.getNote);
+notesRouter.get("/get/:noteId", validate(getDeleteNoteSchema), NotesController.getNoteController);
 
 ////////////////////////////////////
 // POST ROUTES /////////////////////
 ////////////////////////////////////
 
-notesRouter.post("/create", validate(createNoteSchema), NotesController.createNote);
+notesRouter.post("/create", validate(createNoteSchema), NotesController.createNoteController);
 
 ////////////////////////////////////
 // PATCH ROUTES ////////////////////
 ////////////////////////////////////
 
-notesRouter.patch("/update/:noteId", validate(updateNodeSchema), NotesController.updateNote);
+notesRouter.patch("/update/:noteId", validate(updateNodeSchema), NotesController.updateNoteController);
 
 ////////////////////////////////////
 // DELETE ROUTES ///////////////////
 ////////////////////////////////////
 
-notesRouter.delete("/delete/:noteId", validate(getDeleteNoteSchema), NotesController.deleteNote);
+notesRouter.delete("/delete/:noteId", validate(getDeleteNoteSchema), NotesController.deleteNoteController);
 
 ////////////////////////////////////
 // EXPORT ROUTER ///////////////////

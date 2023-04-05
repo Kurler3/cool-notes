@@ -6,9 +6,10 @@ import {
 } from "express";
 import NoteModel from "../models/note.model";
 import createHttpError from "http-errors";
+import { createNote, findNotes } from "../services/notes.service";
 
 // GET ALL NOTES CONTROLLER
-export const getAllNotes: RequestHandler = async (
+export const getAllNotesController: RequestHandler = async (
     req: Request, 
     res: Response,
     next: NextFunction 
@@ -16,7 +17,7 @@ export const getAllNotes: RequestHandler = async (
     try {
 
         // .EXEC RETURNS A REAL PROMISE INSTANCE
-        const notes = await NoteModel.find().exec();
+        const notes = await findNotes();
 
         return res.status(200).json(notes);
 
@@ -26,7 +27,7 @@ export const getAllNotes: RequestHandler = async (
 }
 
 // CREATE NOTE CONTROLLER
-export const createNote: RequestHandler = async (
+export const createNoteController: RequestHandler = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -35,7 +36,7 @@ export const createNote: RequestHandler = async (
 
         const {title, text} = req.body;
 
-        const newNote = await NoteModel.create({
+        const newNote = await createNote({
             title,
             text,
         });
@@ -49,7 +50,7 @@ export const createNote: RequestHandler = async (
 }
 
 // GET NOTE CONTROLLER
-export const getNote: RequestHandler = async (
+export const getNoteController: RequestHandler = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -76,7 +77,7 @@ export const getNote: RequestHandler = async (
 }
 
 // UPDATE NOTE CONTROLLER
-export const updateNote: RequestHandler = async (
+export const updateNoteController: RequestHandler = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -120,7 +121,7 @@ export const updateNote: RequestHandler = async (
 }
 
 // DELETE NOTE CONTROLLER
-export const deleteNote: RequestHandler = async (
+export const deleteNoteController: RequestHandler = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -140,9 +141,7 @@ export const deleteNote: RequestHandler = async (
         // FIND AND DELETE NOTE
         await note.deleteOne();
 
-        return res.status(200).json({
-            message: "Note deleted!"
-        })
+        return res.sendStatus(204)
 
     } catch (error) {
         next(error);
