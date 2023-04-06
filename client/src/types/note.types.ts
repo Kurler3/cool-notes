@@ -1,8 +1,8 @@
 
-export type Note = {
+export type INote = {
     _id: string;
     title: string;
     text: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
 }

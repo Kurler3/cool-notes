@@ -1,0 +1,14 @@
+
+.noteCard {
+    background: cornsilk!important;
+}
+
+.cardText {
+    white-space: pre-line;
+}
+
+.cardBody {
+    overflow: hidden!important;
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
+    mask-image: linear-gradient(180deg, #000 60%, transparent);
+}

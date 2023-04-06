@@ -7,6 +7,7 @@ import express, {
 import notesRouter from "./routers/notes.router";
 import morgan from "morgan";
 import createHttpError, { isHttpError } from "http-errors";
+import cors from "cors";
 
 ////////////////////////////////
 // INIT APP ////////////////////
@@ -22,6 +23,8 @@ const app = express();
 app.use(express.json());
 
 app.use(morgan("dev"));
+
+app.use(cors())
 
 ////////////////////////////////
 // SETTING ROUTERS /////////////

@@ -1,11 +1,15 @@
-import "./App.css"
 import axios from "axios";
 import {
   useQuery
 } from "react-query";
-import { QueryClient, QueryClientProvider } from "react-query";
-
-const queryClient = new QueryClient({});
+import { INote } from "./types/note.types";
+import Note from "./components/Note.component";
+import {
+  Container,
+  Row,
+  Col,
+} from "react-bootstrap";
+import notesPageStyles from "./styles/notesPage.module.css";
 
 function App() {
   
@@ -15,22 +19,36 @@ function App() {
     data,
     error,
     refetch
-  } = useQuery(
+  } = useQuery<INote[]>(
     ["notes"],
     () => axios.get("http://localhost:5000/api/notes/list")
     .then((res) => res.data)
   )
 
-    if(isLoading) return "Loading...";
+  if(isLoading) return "Loading...";
 
-    if(error) return "An error has occurred:" + error;
+  if(error) return "An error has occurred:" + error;
 
-    console.log(data);
+  console.log(data);
 
   return (
-    <div className="App">
-      
-    </div>
+    <Container>
+      <Row xs={1} md={2} xl={3} className="gap-4">
+        {
+          data?.map((note) => {
+            return (
+              <Col key={note._id}>
+                <Note 
+                  note={note}
+                  className={notesPageStyles.note}
+                />
+              </Col>
+            )
+          })
+        }
+      </Row>
+        
+    </Container>
   )
 }
 
