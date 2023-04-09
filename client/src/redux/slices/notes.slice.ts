@@ -21,7 +21,13 @@ const initialState: NotesState = {
 const notesSlice = createSlice({
   name: 'notes',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    addNote: (state, action) => {
+
+      state.notes?.unshift(action.payload);
+
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchNotes.pending, (state) => {
@@ -36,5 +42,9 @@ const notesSlice = createSlice({
       });
   },
 });
+
+export const {
+  addNote
+} = notesSlice.actions;
 
 export default notesSlice.reducer;

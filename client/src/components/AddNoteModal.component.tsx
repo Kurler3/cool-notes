@@ -5,10 +5,9 @@ import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { NoteInput } from '../types/note.types';
 import { NotesApi } from '../api/notes.api';
+import { addNote } from '../redux/slices/notes.slice';
 
-const AddNoteModal: React.FC = ({
-
-}) => {
+const AddNoteModal: React.FC = () => {
 
     //////////////////////
     // DATA //////////////
@@ -30,20 +29,24 @@ const AddNoteModal: React.FC = ({
     // FUNCTIONS /////////
     //////////////////////
 
-    const onSaveNote = useCallback(async (input: NoteInput) => { 
+    const onSaveNote = async (input: NoteInput) => { 
 
         try {
 
-            const noteResponse = await NotesApi.createNote(input);
+            // CREATE NEW NOTE
+            const newNote = await NotesApi.createNote(input);
 
+            // PUSH TO NOTES ARRAY
+            dispatch(addNote(newNote));
+
+            // CLOSE MODAL
+            dispatch(showHideAddNoteModal());
             
-
         } catch (error) {
             console.error(error);
             alert(error);
         }
-
-    },[]);
+    }
 
     //////////////////////
     // RENDER ////////////
@@ -61,7 +64,7 @@ const AddNoteModal: React.FC = ({
 
             <Modal.Body>
 
-                <Form id="addNoteForm">
+                <Form id="addNoteForm" onSubmit={handleSubmit(onSaveNote)}>
 
                     <Form.Group className="mb-3">
 
@@ -72,7 +75,21 @@ const AddNoteModal: React.FC = ({
                         <Form.Control
                             type="text"
                             placeholder="Title..."
+                            isInvalid={!!errors.title}
+                            {
+                                ...register(
+                                    "title", 
+                                    {
+                                        required: "Title is required!"
+                                    }
+                                )
+                            }
                         />
+
+                        <Form.Control.Feedback type="invalid">
+                            {errors.title?.message}
+                        </Form.Control.Feedback>
+
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -85,7 +102,20 @@ const AddNoteModal: React.FC = ({
                             as="textarea"
                             rows={5}
                             placeholder="Text..."
+                            isInvalid={!!errors.text}
+                            {
+                                ...register('text', 
+                                    {
+                                        required: "Text is required!"
+                                    }
+                                )
+                            }
                         />
+
+                        <Form.Control.Feedback type="invalid">
+                            {errors.text?.message}
+                        </Form.Control.Feedback>
+
                     </Form.Group>
 
                 </Form>
@@ -96,6 +126,7 @@ const AddNoteModal: React.FC = ({
 
                 <Button
                     onClick={() => dispatch(showHideAddNoteModal())}
+                    disabled={isSubmitting}
                 >
                     Close
                 </Button>
@@ -103,6 +134,7 @@ const AddNoteModal: React.FC = ({
                 <Button
                     type="submit"
                     form="addNoteForm"
+                    disabled={isSubmitting}
                 >
                     Save
                 </Button>
