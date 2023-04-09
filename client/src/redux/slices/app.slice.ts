@@ -7,7 +7,7 @@ export type IAppState = {
 };
 
 const initialState: IAppState = {
-    showAddNoteModal: true,
+    showAddNoteModal: false,
 };
 
 export const appSlice = createSlice({

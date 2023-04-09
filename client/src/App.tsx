@@ -1,8 +1,3 @@
-import axios from "axios";
-import {
-  useQuery
-} from "react-query";
-import { INote } from "./types/note.types";
 import Note from "./components/Note.component";
 import {
   Container,
@@ -12,7 +7,7 @@ import {
 } from "react-bootstrap";
 import notesPageStyles from "./styles/notesPage.module.css";
 import { NotesApi } from "./api/notes.api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddNoteModal from "./components/AddNoteModal.component";
 import {
   useSelector,
@@ -20,41 +15,47 @@ import {
 } from "react-redux";
 import { getShowAddNoteModal } from "./redux/selectors/app.selectors";
 import { showHideAddNoteModal } from "./redux/slices/app.slice";
+import { getNotesState } from "./redux/selectors/notes.selectors";
+import { fetchNotes } from "./redux/slices/notes.slice";
+import { AppDispatch } from "./redux/store";
 
 function App() {
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const showAddNoteModal = useSelector(getShowAddNoteModal);
 
   const {
-    isLoading,
-    data,
+    notes,
+    loading,
     error,
-  } = useQuery<INote[]>(
-    ["notes"],
-    NotesApi.getNotes
-  );
+  } = useSelector(getNotesState);
 
-  if(isLoading) return "Loading...";
+  useEffect(() => {
+
+    dispatch(fetchNotes())
+
+  }, [])
+
+  if(loading) return "Loading...";
 
   if(error) return (
-    <div>
-      An error has occurred: {error as string}
-    </div>
-  )
+      <div>
+        An error has occurred: {error as string}
+      </div>
+    )
 
   // RETURN
   return (
     <Container>
 
-      <Button onClick={() => dispatch(showHideAddNoteModal)}>
+      <Button onClick={() => dispatch(showHideAddNoteModal())}>
         Add new note
       </Button>
 
       <Row xs={1} md={2} xl={3} className="gap-4 p-4">
         {
-          data?.map((note) => {
+          notes?.map((note) => {
             return (
               <Col key={note._id}>
                 <Note 
@@ -69,7 +70,8 @@ function App() {
 
       {
         showAddNoteModal &&
-        <AddNoteModal />
+        <AddNoteModal 
+        />
       }
 
     </Container>
