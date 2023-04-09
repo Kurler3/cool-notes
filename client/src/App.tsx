@@ -8,32 +8,51 @@ import {
   Container,
   Row,
   Col,
+  Button,
 } from "react-bootstrap";
 import notesPageStyles from "./styles/notesPage.module.css";
+import { NotesApi } from "./api/notes.api";
+import { useState } from "react";
+import AddNoteModal from "./components/AddNoteModal.component";
+import {
+  useSelector,
+  useDispatch
+} from "react-redux";
+import { getShowAddNoteModal } from "./redux/selectors/app.selectors";
+import { showHideAddNoteModal } from "./redux/slices/app.slice";
 
 function App() {
-  
+
+  const dispatch = useDispatch();
+
+  const showAddNoteModal = useSelector(getShowAddNoteModal);
+
   const {
     isLoading,
-    isError,
     data,
     error,
-    refetch
   } = useQuery<INote[]>(
     ["notes"],
-    () => axios.get("http://localhost:5000/api/notes/list")
-    .then((res) => res.data)
-  )
+    NotesApi.getNotes
+  );
 
   if(isLoading) return "Loading...";
 
-  if(error) return "An error has occurred:" + error;
+  if(error) return (
+    <div>
+      An error has occurred: {error as string}
+    </div>
+  )
 
-  console.log(data);
-
+  // RETURN
   return (
     <Container>
-      <Row xs={1} md={2} xl={3} className="gap-4">
+
+      <Button onClick={() => dispatch(showHideAddNoteModal)}>
+        Add new note
+      </Button>
+
+      <Row xs={1} md={2} xl={3} className="gap-4 p-4">
         {
           data?.map((note) => {
             return (
@@ -47,7 +66,12 @@ function App() {
           })
         }
       </Row>
-        
+
+      {
+        showAddNoteModal &&
+        <AddNoteModal />
+      }
+
     </Container>
   )
 }

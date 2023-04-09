@@ -6,3 +6,8 @@ export type INote = {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface NoteInput {
+    title: string;
+    text: string;
+}
