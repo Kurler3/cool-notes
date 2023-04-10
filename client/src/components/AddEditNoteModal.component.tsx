@@ -1,13 +1,17 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { Button, Form, Modal } from 'react-bootstrap';
-import { showHideAddNoteModal } from '../redux/slices/app.slice';
+import { setEditingNote, showHideAddEditNoteModal } from '../redux/slices/app.slice';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { NoteInput } from '../types/note.types';
+import { INote, NoteInput } from '../types/note.types';
 import { NotesApi } from '../api/notes.api';
-import { addNote } from '../redux/slices/notes.slice';
+import { addNote, updateNote } from '../redux/slices/notes.slice';
 
-const AddEditNoteModal: React.FC = () => {
+interface IProps {
+    editingNote: INote | null;
+}
+
+const AddEditNoteModal: React.FC<IProps> = ({editingNote}) => {
 
     //////////////////////
     // DATA //////////////
@@ -22,14 +26,18 @@ const AddEditNoteModal: React.FC = () => {
             errors,
             isSubmitting,
         }
-    } = useForm<NoteInput>();
+    } = useForm<NoteInput>({
+        defaultValues: {
+            ...editingNote
+        }
+    });
 
 
     //////////////////////
     // FUNCTIONS /////////
     //////////////////////
 
-    const onSaveNote = async (input: NoteInput) => { 
+    const onSaveNewNote = async (input: NoteInput) => { 
 
         try {
 
@@ -40,8 +48,29 @@ const AddEditNoteModal: React.FC = () => {
             dispatch(addNote(newNote));
 
             // CLOSE MODAL
-            dispatch(showHideAddNoteModal());
+            dispatch(showHideAddEditNoteModal());
             
+        } catch (error) {
+            console.error(error);
+            alert(error);
+        } 
+    }
+
+    const onSaveEditingNote = async (input: NoteInput) => {
+        try {
+
+            // UPDATE NOTE
+            const updatedNote = await NotesApi.updateNote(
+                editingNote!._id,
+                input,
+            );
+
+            // SUBSTITUTE IN NOTES ARRAY
+            dispatch(updateNote(updatedNote));
+
+            // CLOSE MODAL
+            dispatch(showHideAddEditNoteModal());
+
         } catch (error) {
             console.error(error);
             alert(error);
@@ -54,17 +83,20 @@ const AddEditNoteModal: React.FC = () => {
 
     return (
         <Modal show={true}
-            onHide={() => dispatch(showHideAddNoteModal())}
+            onHide={() => {
+                dispatch(showHideAddEditNoteModal());
+                dispatch(setEditingNote(null));
+            }}
         >
             <Modal.Header closeButton>
                 <Modal.Title>
-                    Add Note
+                    {editingNote?"Edit":"Add"} Note
                 </Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
 
-                <Form id="addNoteForm" onSubmit={handleSubmit(onSaveNote)}>
+                <Form id="addNoteForm" onSubmit={handleSubmit(editingNote ? onSaveEditingNote : onSaveNewNote)}>
 
                     <Form.Group className="mb-3">
 
@@ -125,7 +157,7 @@ const AddEditNoteModal: React.FC = () => {
             <Modal.Footer>
 
                 <Button
-                    onClick={() => dispatch(showHideAddNoteModal())}
+                    onClick={() => dispatch(showHideAddEditNoteModal())}
                     disabled={isSubmitting}
                 >
                     Close

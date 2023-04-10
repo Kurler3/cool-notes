@@ -14,8 +14,8 @@ import {
   useSelector,
   useDispatch
 } from "react-redux";
-import { getIsAppLoading, getShowAddNoteModal } from "./redux/selectors/app.selectors";
-import { setAppLoading, showHideAddNoteModal } from "./redux/slices/app.slice";
+import { getEditingNote, getIsAppLoading, getShowAddNoteModal } from "./redux/selectors/app.selectors";
+import { setAppLoading, setEditingNote, showHideAddEditNoteModal } from "./redux/slices/app.slice";
 import { getNotesState } from "./redux/selectors/notes.selectors";
 import { fetchNotes, removeNote } from "./redux/slices/notes.slice";
 import { AppDispatch } from "./redux/store";
@@ -33,6 +33,9 @@ function App() {
     
   const showAddNoteModal = useSelector(getShowAddNoteModal);
   const isAppLoading = useSelector(getIsAppLoading);
+  const editingNote = useSelector(getEditingNote);
+
+  console.log(editingNote)
 
   const {
     notes,
@@ -44,19 +47,13 @@ function App() {
   // FUNCTIONS ////////////
   /////////////////////////
 
-  const handleEditNote = useCallback(async (noteId: string, newNoteInput: NoteInput) => {
-    try {
-      
-    } catch (error) {
-      // CONSOLE ERROR
-      console.error(error);
+  const handleEditNote = useCallback(async (note: INote) => {
 
-      // SHOW TOAST 
-      alert(error);
-    } finally {
-      // REMOVE LOADING
-      dispatch(setAppLoading(false));
-    }
+    // SET EDITING NOTE
+    dispatch(setEditingNote(note));
+
+    // SET SHOW ADD EDIT MODAL
+    dispatch(showHideAddEditNoteModal());
 
   }, [])
 
@@ -123,7 +120,7 @@ function App() {
   return (
     <Container className="p-4">
 
-      <Button className={`${utilsStyles.blockCenter} mb-4 gap-2 ${utilsStyles.flexCenter}`} onClick={() => dispatch(showHideAddNoteModal())}>
+      <Button className={`${utilsStyles.blockCenter} mb-4 gap-2 ${utilsStyles.flexCenter}`} onClick={() => dispatch(showHideAddEditNoteModal())}>
         <FaPlus />
         Add new note
       </Button>
@@ -139,6 +136,7 @@ function App() {
                   note={note}
                   className={notesPageStyles.note}
                   handleDeleteNote={handleDeleteNote}
+                  handleEditNote={handleEditNote}
                 />
               </Col>
             )
@@ -154,6 +152,7 @@ function App() {
       {
         showAddNoteModal &&
         <AddEditNoteModal 
+            editingNote={editingNote}
         />
       }
 

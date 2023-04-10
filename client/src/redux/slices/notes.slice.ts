@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { NotesApi } from '../../api/notes.api';
 import { INote } from '../../types/note.types';
 
@@ -31,6 +31,15 @@ const notesSlice = createSlice({
 
       state.notes = state.notes!.filter((note) => note._id !== action.payload);
 
+    },
+    updateNote: (state, action) => {
+
+      // FIND INDEX
+      const indexToSubstitute = state.notes!.findIndex((note) => note._id === action.payload._id);
+
+      // SUBSTITUTE
+      state.notes![indexToSubstitute] = action.payload;
+
     }
   },
   extraReducers: (builder) => {
@@ -51,6 +60,7 @@ const notesSlice = createSlice({
 export const {
   addNote,
   removeNote,
+  updateNote
 } = notesSlice.actions;
 
 export default notesSlice.reducer;

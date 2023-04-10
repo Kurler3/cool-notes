@@ -14,12 +14,14 @@ interface IProps {
     note: INote;
     className?: string;
     handleDeleteNote: (noteId: string) => Promise<void>;
+    handleEditNote: (note: INote) => void;
 }
 
 const Note:React.FC<IProps> = ({
     note,
     className,
     handleDeleteNote,
+    handleEditNote,
 }) => {
   
   ///////////////////////////////
@@ -36,7 +38,10 @@ const Note:React.FC<IProps> = ({
   }, []);
 
   return (
-    <Card className={`${noteStyles.noteCard} ${className ?? ""}`}>
+    <Card 
+      className={`${noteStyles.noteCard} ${className ?? ""}`}
+      onClick={() => handleEditNote(note)}
+    >
         <Card.Body className={noteStyles.cardBody}>
             <Card.Title className={utilsStyles.flexCenter}>
                 {note.title}
