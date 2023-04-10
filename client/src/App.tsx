@@ -8,23 +8,31 @@ import {
 import notesPageStyles from "./styles/notesPage.module.css";
 import utilsStyles from "./styles/utils.module.css";
 import { NotesApi } from "./api/notes.api";
-import { useEffect, useState } from "react";
-import AddNoteModal from "./components/AddNoteModal.component";
+import { useCallback, useEffect, useState } from "react";
+import AddEditNoteModal from "./components/AddEditNoteModal.component";
 import {
   useSelector,
   useDispatch
 } from "react-redux";
-import { getShowAddNoteModal } from "./redux/selectors/app.selectors";
-import { showHideAddNoteModal } from "./redux/slices/app.slice";
+import { getIsAppLoading, getShowAddNoteModal } from "./redux/selectors/app.selectors";
+import { setAppLoading, showHideAddNoteModal } from "./redux/slices/app.slice";
 import { getNotesState } from "./redux/selectors/notes.selectors";
-import { fetchNotes } from "./redux/slices/notes.slice";
+import { fetchNotes, removeNote } from "./redux/slices/notes.slice";
 import { AppDispatch } from "./redux/store";
+import {FaPlus} from "react-icons/fa";
+import { INote, NoteInput } from "./types/note.types";
 
 function App() {
 
+  /////////////////////////
+  // STATE ////////////////
+  /////////////////////////
+
   const dispatch = useDispatch<AppDispatch>();
 
+    
   const showAddNoteModal = useSelector(getShowAddNoteModal);
+  const isAppLoading = useSelector(getIsAppLoading);
 
   const {
     notes,
@@ -32,11 +40,75 @@ function App() {
     error,
   } = useSelector(getNotesState);
 
+  /////////////////////////
+  // FUNCTIONS ////////////
+  /////////////////////////
+
+  const handleEditNote = useCallback(async (noteId: string, newNoteInput: NoteInput) => {
+    try {
+      
+    } catch (error) {
+      // CONSOLE ERROR
+      console.error(error);
+
+      // SHOW TOAST 
+      alert(error);
+    } finally {
+      // REMOVE LOADING
+      dispatch(setAppLoading(false));
+    }
+
+  }, [])
+
+  const handleDeleteNote = useCallback(async (
+    noteId:string,
+  ) => {
+    try {
+
+      // START LOADING
+      dispatch(setAppLoading(true));
+  
+      // CALL DELETE METHOD FROM NOTES API
+      await NotesApi.deleteNote(noteId);
+
+      // REMOVE NOTE FROM STATE
+      dispatch(removeNote(noteId));
+
+    } catch (error) {
+
+      // CONSOLE ERROR
+      console.error('Error removing...', error);
+
+      // SHOW TOAST 
+      alert(error);
+
+    } finally {
+      // REMOVE LOADING
+      dispatch(setAppLoading(false));
+    }
+  }, []);
+
+  /////////////////////////
+  // USE EFFECT ///////////
+  /////////////////////////
+
   useEffect(() => {
 
     dispatch(fetchNotes())
 
   }, [])
+
+  /////////////////////////
+  // RENDER ///////////////
+  /////////////////////////
+
+  if(isAppLoading) {
+      return (
+        <div>
+          App is LOADING BOIS
+        </div>
+      ) 
+  }
 
   if(loading) return "Loading...";
 
@@ -44,13 +116,15 @@ function App() {
       <div>
         An error has occurred: {error as string}
       </div>
-    )
+  )
+
 
   // RETURN
   return (
     <Container className="p-4">
 
-      <Button className={utilsStyles.blockCenter} onClick={() => dispatch(showHideAddNoteModal())}>
+      <Button className={`${utilsStyles.blockCenter} mb-4 gap-2 ${utilsStyles.flexCenter}`} onClick={() => dispatch(showHideAddNoteModal())}>
+        <FaPlus />
         Add new note
       </Button>
 
@@ -58,12 +132,13 @@ function App() {
         {
           notes ? 
           notes.length > 0 ? 
-            notes?.map((note) => {
+            notes?.map((note:INote) => {
             return (
               <Col key={note._id}>
                 <Note 
                   note={note}
                   className={notesPageStyles.note}
+                  handleDeleteNote={handleDeleteNote}
                 />
               </Col>
             )
@@ -78,7 +153,7 @@ function App() {
 
       {
         showAddNoteModal &&
-        <AddNoteModal 
+        <AddEditNoteModal 
         />
       }
 

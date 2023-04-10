@@ -4,10 +4,12 @@ import {
 
 export type IAppState = {
     showAddNoteModal: boolean,
+    isAppLoading: boolean
 };
 
 const initialState: IAppState = {
     showAddNoteModal: false,
+    isAppLoading: false,
 };
 
 export const appSlice = createSlice({
@@ -19,11 +21,16 @@ export const appSlice = createSlice({
             state.showAddNoteModal = !state.showAddNoteModal;
         },
 
+        setAppLoading: (state, action) => {
+            state.isAppLoading = action.payload;
+        }
+
     }
 });
 
 export const {
-    showHideAddNoteModal
+    showHideAddNoteModal,
+    setAppLoading
 } = appSlice.actions;
 
 export default appSlice.reducer;

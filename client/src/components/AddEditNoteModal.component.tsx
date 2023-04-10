@@ -7,7 +7,7 @@ import { NoteInput } from '../types/note.types';
 import { NotesApi } from '../api/notes.api';
 import { addNote } from '../redux/slices/notes.slice';
 
-const AddNoteModal: React.FC = () => {
+const AddEditNoteModal: React.FC = () => {
 
     //////////////////////
     // DATA //////////////
@@ -146,4 +146,4 @@ const AddNoteModal: React.FC = () => {
     )
 }
 
-export default AddNoteModal;
+export default AddEditNoteModal;

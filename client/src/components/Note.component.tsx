@@ -13,11 +13,13 @@ import {
 interface IProps {  
     note: INote;
     className?: string;
+    handleDeleteNote: (noteId: string) => Promise<void>;
 }
 
 const Note:React.FC<IProps> = ({
     note,
     className,
+    handleDeleteNote,
 }) => {
   
   ///////////////////////////////
@@ -33,33 +35,6 @@ const Note:React.FC<IProps> = ({
     return initialText + " " + formatDate(note[dateKey]);
   }, []);
 
-  ///////////////////////////////
-  // FUNCTIONS //////////////////
-  ///////////////////////////////
-
-  const handleDelete = useCallback(() => {
-
-    try {
-
-      // START LOADING
-
-      // CALL DELETE METHOD FROM NOTES API
-
-      // REMOVE NOTE FROM STATE
-
-      // SHOW OK TOAST
-
-    } catch (error) {
-
-      // CONSOLE ERROR
-
-      // SHOW TOAST
-
-    } finally {
-      // REMOVE LOADING
-    }
-  }, []);
-
   return (
     <Card className={`${noteStyles.noteCard} ${className ?? ""}`}>
         <Card.Body className={noteStyles.cardBody}>
@@ -69,11 +44,10 @@ const Note:React.FC<IProps> = ({
                 <MdDelete 
                   className='text-muted ms-auto'
                   onClick={(e) => {
-
-                    handleDelete()
-
                     // DOESN'T TRIGGER CLICK IN PARENT COMPONENT
                     e.stopPropagation()
+
+                    handleDeleteNote(note._id);
                   }}
                 />
             </Card.Title>
