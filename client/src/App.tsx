@@ -6,6 +6,7 @@ import {
   Button,
 } from "react-bootstrap";
 import notesPageStyles from "./styles/notesPage.module.css";
+import utilsStyles from "./styles/utils.module.css";
 import { NotesApi } from "./api/notes.api";
 import { useEffect, useState } from "react";
 import AddNoteModal from "./components/AddNoteModal.component";
@@ -47,15 +48,17 @@ function App() {
 
   // RETURN
   return (
-    <Container>
+    <Container className="p-4">
 
-      <Button onClick={() => dispatch(showHideAddNoteModal())}>
+      <Button className={utilsStyles.blockCenter} onClick={() => dispatch(showHideAddNoteModal())}>
         Add new note
       </Button>
 
       <Row xs={1} md={2} xl={3} className="gap-4 p-4">
         {
-          notes?.map((note) => {
+          notes ? 
+          notes.length > 0 ? 
+            notes?.map((note) => {
             return (
               <Col key={note._id}>
                 <Note 
@@ -64,8 +67,13 @@ function App() {
                 />
               </Col>
             )
-          })
+            }) 
+            :
+            <div>You haven't added any notes</div>
+          :
+          null
         }
+        
       </Row>
 
       {
