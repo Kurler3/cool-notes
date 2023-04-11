@@ -1,4 +1,3 @@
-import "dotenv/config";
 import express, {
     NextFunction,
     Request,
@@ -9,6 +8,9 @@ import morgan from "morgan";
 import createHttpError, { isHttpError } from "http-errors";
 import cors from "cors";
 import usersRouter from "./routers/users.router";
+import session from "express-session";
+import env from "./utils/validateEnv";
+import MongoStore from "connect-mongo";
 
 ////////////////////////////////
 // INIT APP ////////////////////
@@ -26,6 +28,19 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use(cors())
+
+app.use(session({
+    secret: env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 60 * 60 * 1000, // 1 HOUR,
+    },
+    rolling: true, // AS LONG AS USER IS USING IT, KEEP IT ALIVE
+    store: MongoStore.create({
+        mongoUrl: env.DATABASE_URI
+    })
+}));
 
 ////////////////////////////////
 // SETTING ROUTERS /////////////

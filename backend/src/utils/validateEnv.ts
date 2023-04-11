@@ -12,5 +12,6 @@ export default cleanEnv(
     {
         DATABASE_URI: str(),
         PORT: port(),
+        SESSION_SECRET: str(),
     }
 );
