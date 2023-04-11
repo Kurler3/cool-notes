@@ -8,6 +8,7 @@ import notesRouter from "./routers/notes.router";
 import morgan from "morgan";
 import createHttpError, { isHttpError } from "http-errors";
 import cors from "cors";
+import usersRouter from "./routers/users.router";
 
 ////////////////////////////////
 // INIT APP ////////////////////
@@ -30,6 +31,10 @@ app.use(cors())
 // SETTING ROUTERS /////////////
 ////////////////////////////////
 
+// USERS ROUTER
+app.use("/api/users", usersRouter);
+
+// NOTES ROUTER
 app.use("/api/notes", notesRouter);
 
 ////////////////////////////////
