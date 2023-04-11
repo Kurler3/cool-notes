@@ -29,6 +29,7 @@ app.use(morgan("dev"));
 
 app.use(cors())
 
+// SETTING UP SESSION MIDDLEWARE
 app.use(session({
     secret: env.SESSION_SECRET,
     resave: false,
@@ -39,7 +40,7 @@ app.use(session({
     rolling: true, // AS LONG AS USER IS USING IT, KEEP IT ALIVE
     store: MongoStore.create({
         mongoUrl: env.DATABASE_URI
-    })
+    }),
 }));
 
 ////////////////////////////////

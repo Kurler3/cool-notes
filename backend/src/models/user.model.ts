@@ -62,6 +62,11 @@ userSchema.methods.comparePassword = async function(candidatePassword: string): 
     });
 }
 
-const UserModel = mongoose.model<IUser>("User", userSchema);
+const UserModel = mongoose.model<
+    IUser & 
+    {
+        comparePassword: (candidatePassword: string) => Promise<boolean> 
+    }
+>("User", userSchema);
 
 export default UserModel;
