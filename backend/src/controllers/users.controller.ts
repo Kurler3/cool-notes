@@ -85,7 +85,7 @@ export const loginController: RequestHandler = async (
     // SET REQ.SESSION.userId = USER ID
     (req.session as ISession).userId = user._id;
 
-    res.status(201).json(omit(user.toJSON(), ["password"]));
+    res.status(200).json(omit(user.toJSON(), ["password"]));
   } catch (error) {
     next(error);
   }

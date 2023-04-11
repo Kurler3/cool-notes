@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { INote, NoteInput } from '../types/note.types';
 import { NotesApi } from '../api/notes.api';
 import { addNote, updateNote } from '../redux/slices/notes.slice';
+import TextInputField from './form/textInputField';
 
 interface IProps {
     editingNote: INote | null;
@@ -98,57 +99,30 @@ const AddEditNoteModal: React.FC<IProps> = ({editingNote}) => {
 
                 <Form id="addNoteForm" onSubmit={handleSubmit(editingNote ? onSaveEditingNote : onSaveNewNote)}>
 
-                    <Form.Group className="mb-3">
+                    <TextInputField 
+                        name="title"
+                        label="Title"
+                        register={register}
+                        registerOptions={{
+                            required: "Title is required!"
+                        }}
+                        error={errors.title}
+                        type="text"
+                        placeholder="Title..."
+                    />
 
-                        <Form.Label>
-                            Title
-                        </Form.Label>
-
-                        <Form.Control
-                            type="text"
-                            placeholder="Title..."
-                            isInvalid={!!errors.title}
-                            {
-                                ...register(
-                                    "title", 
-                                    {
-                                        required: "Title is required!"
-                                    }
-                                )
-                            }
-                        />
-
-                        <Form.Control.Feedback type="invalid">
-                            {errors.title?.message}
-                        </Form.Control.Feedback>
-
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-
-                        <Form.Label>
-                            Text
-                        </Form.Label>
-
-                        <Form.Control
-                            as="textarea"
-                            rows={5}
-                            placeholder="Text..."
-                            isInvalid={!!errors.text}
-                            {
-                                ...register('text', 
-                                    {
-                                        required: "Text is required!"
-                                    }
-                                )
-                            }
-                        />
-
-                        <Form.Control.Feedback type="invalid">
-                            {errors.text?.message}
-                        </Form.Control.Feedback>
-
-                    </Form.Group>
+                    <TextInputField 
+                        name="text"
+                        label="Text"
+                        register={register}
+                        registerOptions={{
+                            required: "Text is required!"
+                        }}
+                        error={errors.text}
+                        as="textarea"
+                        rows={5}
+                        placeholder="Text..."
+                    />
 
                 </Form>
 
