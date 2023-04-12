@@ -24,14 +24,12 @@ export type IAppState = {
     showSignUpLoginModal: boolean;
     isLogin: boolean;
     isAppLoading: boolean;
-    editingNote: INote | null;
     user: IUser | null;
 };
 
 const initialState: IAppState = {
     showAddNoteModal: false,
     isAppLoading: false,
-    editingNote: null,
     showSignUpLoginModal: false,
     isLogin: false,
     user: null,
@@ -48,9 +46,6 @@ export const appSlice = createSlice({
         showHideAddEditNoteModal: (state) => {
             state.showAddNoteModal = !state.showAddNoteModal;
         },
-        setEditingNote: (state, action) => {
-            state.editingNote = action.payload;
-        },   
         setAppLoading: (state, action) => {
             state.isAppLoading = action.payload;
         },
@@ -87,7 +82,6 @@ export const appSlice = createSlice({
 export const {
     showHideAddEditNoteModal,
     setAppLoading,
-    setEditingNote,
     showHideSignUpLoginModal,
     setUser,
     setIsLogin

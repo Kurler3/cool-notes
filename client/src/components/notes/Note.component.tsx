@@ -1,11 +1,11 @@
 
 
 import React, {useCallback, useMemo} from 'react'
-import { INote } from '../types/note.types'
+import { INote } from '../../types/note.types'
 import { Card, Button } from 'react-bootstrap';
-import noteStyles from "../styles/note.module.css";
-import utilsStyles from "../styles/utils.module.css";
-import formatDate from '../utils/formatDate';
+import noteStyles from "../../styles/note.module.css";
+import utilsStyles from "../../styles/utils.module.css";
+import formatDate from '../../utils/formatDate';
 import {
   MdDelete
 } from "react-icons/md";

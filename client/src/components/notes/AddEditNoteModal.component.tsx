@@ -1,12 +1,12 @@
 import React from 'react'
 import { Button, Form, Modal } from 'react-bootstrap';
-import { setEditingNote, showHideAddEditNoteModal } from '../redux/slices/app.slice';
+import { showHideAddEditNoteModal } from '../../redux/slices/app.slice';
 import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { INote, NoteInput } from '../types/note.types';
-import { NotesApi } from '../api/notes.api';
-import { addNote, updateNote } from '../redux/slices/notes.slice';
-import TextInputField from './form/TextInputField';
+import { INote, NoteInput } from '../../types/note.types';
+import { NotesApi } from '../../api/notes.api';
+import { addNote, setEditingNote, updateNote } from '../../redux/slices/notes.slice';
+import TextInputField from '../form/TextInputField';
 
 interface IProps {
     editingNote: INote | null;

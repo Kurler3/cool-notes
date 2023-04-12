@@ -8,14 +8,16 @@ export const fetchNotes = createAsyncThunk('notes/fetchNotes', async () => {
 
 interface NotesState {
     notes: INote[] | null,
-    error: null | string | undefined;
-    loading: boolean;
+    fetchNotesError: null | string | undefined;
+    loadingNotes: boolean;
+    editingNote: INote | null;
 }
 
 const initialState: NotesState = {
     notes: null,
-    error: null,
-    loading: true,
+    fetchNotesError: null,
+    loadingNotes: true,
+    editingNote: null,
 }
 
 const notesSlice = createSlice({
@@ -32,6 +34,9 @@ const notesSlice = createSlice({
       state.notes = state.notes!.filter((note) => note._id !== action.payload);
 
     },
+    setEditingNote: (state, action) => {
+      state.editingNote = action.payload;
+    },  
     updateNote: (state, action) => {
 
       // FIND INDEX
@@ -45,15 +50,15 @@ const notesSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchNotes.pending, (state) => {
-        state.loading = true;
+        state.loadingNotes = true;
       })
       .addCase(fetchNotes.fulfilled, (state, action) => {
         state.notes = action.payload;
-        state.loading = false;
+        state.loadingNotes = false;
       })
       .addCase(fetchNotes.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.loadingNotes = false;
+        state.fetchNotesError = action.error.message;
       });
   },
 });
@@ -61,7 +66,8 @@ const notesSlice = createSlice({
 export const {
   addNote,
   removeNote,
-  updateNote
+  updateNote,
+  setEditingNote
 } = notesSlice.actions;
 
 export default notesSlice.reducer;
