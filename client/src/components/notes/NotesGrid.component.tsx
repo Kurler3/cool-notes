@@ -3,7 +3,7 @@ import {
   useSelector,
   useDispatch
 } from "react-redux";
-import { getNotes, getNotesState } from '../../redux/selectors/notes.selectors';
+import { getNotes } from '../../redux/selectors/notes.selectors';
 import { INote } from '../../types/note.types';
 import Note from './Note.component';
 import notesPageStyles from "../../styles/notesPage.module.css";

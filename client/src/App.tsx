@@ -15,6 +15,7 @@ import NavBar from "./components/NavBar.component";
 import RegisterLoginModal from "./components/RegisterLoginModal.components";
 import AppLoader from "./components/AppLoader.component";
 import AuthenticatedView from "./components/AuthenticatedView.component";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
 
@@ -25,7 +26,7 @@ function App() {
   const dispatch = useDispatch<AppDispatch>();
 
   /////////////////////////
-  // SELECTORS ////////////
+  // APP STATE ////////////
   /////////////////////////
 
   const isAppLoading = useSelector(getIsAppLoading);
@@ -58,46 +59,47 @@ function App() {
 
   // RETURN
   return (
-    <React.Fragment>
-      <NavBar
-        user={user}
-      />
+    <BrowserRouter>
+      <React.Fragment>
+        <NavBar
+          user={user}
+        />
+        
+        {
+          isAppLoading ? (
+            <AppLoader />
+          ) : (
+            <Container className="p-4">
+              {
+                user ?
+                  (
+                    <AuthenticatedView />
+                  )
+                  :
+                  (
+                    <React.Fragment>
 
-      {
-        isAppLoading ? (
-          <AppLoader />
-        ) : (
-          <Container className="p-4">
-            {
-              user ?
-                (
-                  <AuthenticatedView />
-                )
-                :
-                (
-                  <React.Fragment>
+                      <h1 className="text-center">You are not signed in</h1>
 
-                    <h1 className="text-center">You are not signed in</h1>
+                      {
+                        showSignUpLoginModal &&
+                        (
+                          <RegisterLoginModal
+                            isLogin={isLogin}
+                          />
+                        )
+                      }
+                    </React.Fragment>
+                  )
+              }
 
-                    {
-                      showSignUpLoginModal &&
-                      (
-                        <RegisterLoginModal
-                          isLogin={isLogin}
-                        />
-                      )
-                    }
-                  </React.Fragment>
-                )
-            }
-
-          </Container>
-        )
-      }
+            </Container>
+          )
+        }
 
 
-    </React.Fragment>
-
+      </React.Fragment>
+    </BrowserRouter>
   )
 }
 
