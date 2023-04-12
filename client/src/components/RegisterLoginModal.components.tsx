@@ -37,21 +37,19 @@ const RegisterLoginModal: React.FC<IProps> = ({
         input: ISignUpCredentials
     ) => {
         try {
-            
+            // GET USER
             const user = isLogin ? await UsersApi.login(input) : await UsersApi.signUp(input);
-
-            console.log("User: ", user);
-
+            
             // SET USER
             dispatch(setUser(user));
 
             // CLOSE MODAL
             dispatch(showHideSignUpLoginModal());
 
-        } catch (error) {
-            console.error(error);
+        } catch (error:any) {
+            console.error(error.response?.data?.error);
 
-            alert(error);
+            alert(error.response?.data?.error);
         }
     }
 
