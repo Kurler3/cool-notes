@@ -1,7 +1,23 @@
 import {
+    createAsyncThunk,
     createSlice
 } from "@reduxjs/toolkit";
 import { INote } from "../../types/note.types";
+import { IUser } from "../../types/users.types";
+import { UsersApi } from "../../api/users.api";
+
+
+////////////////////////////////////////
+// ASYNC ACTIONS ///////////////////////
+////////////////////////////////////////
+
+export const fetchLoggedInUser = createAsyncThunk("app/fetchLoggedInUser", async () => {
+    return await UsersApi.getLoggedInUser();
+})
+
+////////////////////////////////////////
+// STATE  //////////////////////////////
+////////////////////////////////////////
 
 export type IAppState = {
     showAddNoteModal: boolean;
@@ -9,6 +25,7 @@ export type IAppState = {
     isLogin: boolean;
     isAppLoading: boolean;
     editingNote: INote | null;
+    user: IUser | null;
 };
 
 const initialState: IAppState = {
@@ -17,7 +34,12 @@ const initialState: IAppState = {
     editingNote: null,
     showSignUpLoginModal: false,
     isLogin: false,
+    user: null,
 };
+
+///////////////////////////////////////
+// SLICE //////////////////////////////
+///////////////////////////////////////
 
 export const appSlice = createSlice({
     name: "app",
@@ -37,15 +59,42 @@ export const appSlice = createSlice({
         },
         setIsLogin: (state, action) => {
             state.isLogin = action.payload;
+        },
+        setUser: (state, action) => {
+            state.user = action.payload;
         }
+    },
+    extraReducers: (builder) => {
+
+        builder
+        .addCase(fetchLoggedInUser.pending, (state) => {
+            state.isAppLoading = true;
+        })
+        .addCase(fetchLoggedInUser.fulfilled, (state, action) => {
+            state.user = action.payload;
+            state.isAppLoading = false;
+        })
+        .addCase(fetchLoggedInUser.rejected, (state, action) => {
+            state.isAppLoading = false;
+        })
     }
 });
+
+///////////////////////////////////////
+// EXPORT ACTIONS /////////////////////
+///////////////////////////////////////
 
 export const {
     showHideAddEditNoteModal,
     setAppLoading,
     setEditingNote,
-    showHideSignUpLoginModal
+    showHideSignUpLoginModal,
+    setUser,
+    setIsLogin
 } = appSlice.actions;
+
+///////////////////////////////////////
+// EXPORT REDUCER /////////////////////
+///////////////////////////////////////
 
 export default appSlice.reducer;

@@ -4,9 +4,10 @@ import {
     useDispatch
 } from "react-redux";
 import { Button, Form, Modal } from 'react-bootstrap';
-import { showHideSignUpLoginModal } from '../redux/slices/app.slice';
+import { setUser, showHideSignUpLoginModal } from '../redux/slices/app.slice';
 import { useForm } from 'react-hook-form';
-import TextInputField from './form/textInputField';
+import TextInputField from './form/TextInputField';
+import { UsersApi } from '../api/users.api';
 
 interface IProps {
     isLogin: boolean;
@@ -32,15 +33,25 @@ const RegisterLoginModal: React.FC<IProps> = ({
     // FUNCTIONS //////////////
     ///////////////////////////
 
-    const handleSave = (
+    const handleSave = async (
         input: ISignUpCredentials
     ) => {
         try {
             
-            console.log("Input: ", input);
+            const user = isLogin ? await UsersApi.login(input) : await UsersApi.signUp(input);
+
+            console.log("User: ", user);
+
+            // SET USER
+            dispatch(setUser(user));
+
+            // CLOSE MODAL
+            dispatch(showHideSignUpLoginModal());
 
         } catch (error) {
             console.error(error);
+
+            alert(error);
         }
     }
 
@@ -97,7 +108,7 @@ const RegisterLoginModal: React.FC<IProps> = ({
                         required: "Password is required!"
                     }}
                     error={errors.password}
-                    type="text"
+                    type="password"
                     placeholder="Password..."
                 />
             </Form>
@@ -108,6 +119,7 @@ const RegisterLoginModal: React.FC<IProps> = ({
             <Button 
                 onClick={() => dispatch(showHideSignUpLoginModal())}
                 disabled={isSubmitting}
+                variant="danger"
             >
                 Close
             </Button>
@@ -116,6 +128,7 @@ const RegisterLoginModal: React.FC<IProps> = ({
                 type="submit"
                 form="signUpLoginForm"
                 disabled={isSubmitting}
+                variant="success"
             >
                 Save
             </Button>

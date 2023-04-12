@@ -8,7 +8,7 @@ export class UsersApi {
 
     // GET LOGGED IN USER
     static async getLoggedInUser():Promise<IUser> {
-        const result = await axios.post(
+        const result = await axios.get(
             `${this.BASE_URL}/getAuthenticatedUser`
         );
 

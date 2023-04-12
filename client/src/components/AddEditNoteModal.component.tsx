@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { INote, NoteInput } from '../types/note.types';
 import { NotesApi } from '../api/notes.api';
 import { addNote, updateNote } from '../redux/slices/notes.slice';
-import TextInputField from './form/textInputField';
+import TextInputField from './form/TextInputField';
 
 interface IProps {
     editingNote: INote | null;
