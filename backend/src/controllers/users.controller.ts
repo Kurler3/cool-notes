@@ -1,6 +1,6 @@
 import { NextFunction, Request, RequestHandler, Response } from "express";
 import createHttpError from "http-errors";
-import { createUser, findUser, findUserById } from "../services/users.service";
+import { createUser, findUser } from "../services/users.service";
 import { omit } from "lodash";
 import { ISession } from "../types/sessions.types";
 import UserModel from "../models/user.model";
@@ -101,11 +101,6 @@ export const getAuthenticatedUserController: RequestHandler = async (
     const authenticatedUserId = (req.session as ISession).userId;
 
     try {
-
-        if(!authenticatedUserId) {
-            throw createHttpError(401, "User not authenticated!");
-        }
-
         // SELECT THE EMAIL
         const user = await UserModel.findById(authenticatedUserId).select("+email").exec();
 

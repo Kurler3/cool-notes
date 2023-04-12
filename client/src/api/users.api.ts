@@ -1,6 +1,6 @@
 import { ISignUpCredentials, IUser, ISignInCredentials } from "../types/users.types";
 import axios from "axios";
-
+axios.defaults.withCredentials = true;
 
 export class UsersApi {
 
@@ -36,7 +36,12 @@ export class UsersApi {
         const result = await axios.post(
             `${this.BASE_URL}/login`,
             signInInput,
+            {
+                withCredentials: true,
+            }
         );
+
+        console.log("Result: ", result)
 
         return result.data;
     }

@@ -9,7 +9,7 @@ export const titleTextBody = {
         }),
         text: string({
             required_error: "Text is required!"
-        })
+        }),
     })
 };
 

@@ -4,12 +4,15 @@ import validate from "../middleware/validateResource.middleware";
 import createNoteSchema from "../schemas/notes/createNote.schema";
 import getDeleteNoteSchema from "../schemas/notes/getDeleteNote.schema";
 import updateNodeSchema from "../schemas/notes/updateNote.schema";
+import { validateAuthenticatedUserMiddleware } from "../middleware/validateAuthenticatedUser.middleware";
 
 ////////////////////////////////////
 // INIT NOTES ROUTER ///////////////
 ////////////////////////////////////
 
 const notesRouter = express.Router();
+
+notesRouter.use(validateAuthenticatedUserMiddleware)
 
 ////////////////////////////////////
 // GET ROUTES //////////////////////

@@ -62,7 +62,7 @@ const NavBar: React.FC<IProps> = ({
     return (
         <Navbar bg="primary" variant="dark" expand="sm" sticky="top">
             <Container>
-                <Navbar.Brand href="#home">Cool Notes</Navbar.Brand>
+                <Navbar.Brand>Cool Notes</Navbar.Brand>
 
                 <Navbar.Toggle aria-controls="main-navbar" />
 

@@ -3,6 +3,7 @@ import validate from "../middleware/validateResource.middleware";
 import signUpSchema from "../schemas/users/signUp.schema";
 import * as userController from "../controllers/users.controller";
 import loginSchema from "../schemas/users/login.schema";
+import { validateAuthenticatedUserMiddleware } from "../middleware/validateAuthenticatedUser.middleware";
 
 ////////////////////////////////////
 // INIT USERS ROUTER ///////////////
@@ -18,9 +19,9 @@ usersRouter.post("/sign-up", validate(signUpSchema), userController.signUpContro
 usersRouter.post('/login', validate(loginSchema), userController.loginController);
 
 // GET AUTHENTICATED USER
-usersRouter.get('/getAuthenticatedUser', userController.getAuthenticatedUserController);
+usersRouter.get('/getAuthenticatedUser', validateAuthenticatedUserMiddleware, userController.getAuthenticatedUserController);
 
-usersRouter.post('/logout', userController.logoutController);
+usersRouter.post('/logout', validateAuthenticatedUserMiddleware,  userController.logoutController);
 
 ////////////////////////////////////
 // EXPORT ROUTER  //////////////////

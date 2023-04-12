@@ -1,4 +1,4 @@
-import { FilterQuery } from "mongoose";
+import mongoose, { FilterQuery } from "mongoose";
 import NoteModel, { INote } from "../models/note.model";
 
 
@@ -17,6 +17,7 @@ export const findNote = async(
 export const createNote = async(newNote: {
     title: string;
     text: string;
+    userId: mongoose.Types.ObjectId;
 } ) => {
     return await NoteModel.create(newNote);
 }

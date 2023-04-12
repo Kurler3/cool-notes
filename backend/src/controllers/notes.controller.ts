@@ -16,8 +16,8 @@ export const getAllNotesController: RequestHandler = async (
 ) => {
     try {
 
-        // .EXEC RETURNS A REAL PROMISE INSTANCE
-        const notes = await findNotes();
+        // FIND USER NOTES
+        const notes = await findNotes({userId: res.locals.userId});
 
         return res.status(200).json(notes);
 
@@ -39,6 +39,7 @@ export const createNoteController: RequestHandler = async (
         const newNote = await createNote({
             title,
             text,
+            userId: res.locals.userId,
         });
 
         return res.status(201).json(newNote);

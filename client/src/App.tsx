@@ -8,7 +8,7 @@ import {
 import notesPageStyles from "./styles/notesPage.module.css";
 import utilsStyles from "./styles/utils.module.css";
 import { NotesApi } from "./api/notes.api";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import AddEditNoteModal from "./components/AddEditNoteModal.component";
 import {
   useSelector,
@@ -108,10 +108,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    // FETCH NOTES INITIALLY
-    dispatch(fetchNotes())
-
-  }, [])
+    if(user) {
+       // FETCH NOTES INITIALLY
+      dispatch(fetchNotes())
+    }
+  }, [user])
 
   /////////////////////////
   // RENDER ///////////////
@@ -125,7 +126,9 @@ function App() {
     )
   }
 
-  if (loading) return "Loading...";
+  console.log("LOADING: ", loading)
+
+  // if (loading) return "Loading...";
 
   if (error) return (
     <div>

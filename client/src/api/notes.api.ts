@@ -1,4 +1,5 @@
 import axios from "axios";
+axios.defaults.withCredentials = true;
 import {
     INote, NoteInput
 } from "../types/note.types";

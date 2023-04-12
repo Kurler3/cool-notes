@@ -27,7 +27,11 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
+    credentials: true,
+}))
 
 // SETTING UP SESSION MIDDLEWARE
 app.use(session({
@@ -35,6 +39,8 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
+        httpOnly: true,
+        secure: false,
         maxAge: 60 * 60 * 1000, // 1 HOUR,
     },
     rolling: true, // AS LONG AS USER IS USING IT, KEEP IT ALIVE
@@ -42,6 +48,7 @@ app.use(session({
         mongoUrl: env.DATABASE_URI
     }),
 }));
+
 
 ////////////////////////////////
 // SETTING ROUTERS /////////////

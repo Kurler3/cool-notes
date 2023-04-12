@@ -52,6 +52,7 @@ const notesSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchNotes.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.error.message;
       });
   },
