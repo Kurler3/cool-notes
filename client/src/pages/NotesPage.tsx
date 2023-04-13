@@ -5,17 +5,21 @@ import {
 } from "react-redux";
 import { showHideAddEditNoteModal } from '../redux/slices/app.slice';
 import { FaPlus } from 'react-icons/fa';
-import { getEditingNote, getFetchNotesError, getLoadingNotes, getNotesState } from '../redux/selectors/notes.selectors';
-import { Button, Col, Row, Spinner } from 'react-bootstrap';
-import { INote } from '../types/note.types';
-import Note from './notes/Note.component';
-import AddEditNoteModal from './notes/AddEditNoteModal.component';
+import { getEditingNote, getFetchNotesError, getLoadingNotes } from '../redux/selectors/notes.selectors';
+import { Button} from 'react-bootstrap';
+import AddEditNoteModal from '../components/notes/AddEditNoteModal.component';
 import { getShowAddNoteModal } from '../redux/selectors/app.selectors';
-import LoadingNotes from './notes/LoadingNotes.component';
-import NotesGrid from './notes/NotesGrid.component';
+import LoadingNotes from '../components/notes/LoadingNotes.component';
+import NotesGrid from '../components/notes/NotesGrid.component';
+import { IUser } from '../types/users.types';
 
+interface IProps {
+    user: IUser | null;
+}
 
-const AuthenticatedView = () => {
+const NotesPage:React.FC<IProps> = ({
+    user,
+}) => {
 
     ////////////////////////
     // REDUX ///////////////
@@ -36,6 +40,8 @@ const AuthenticatedView = () => {
     ////////////////////////
 
     return (
+        user ?
+
         <React.Fragment>
 
             <Button className={`${utilsStyles.blockCenter} mb-4 gap-2 ${utilsStyles.flexCenter}`} onClick={() => dispatch(showHideAddEditNoteModal())}>
@@ -69,7 +75,15 @@ const AuthenticatedView = () => {
             }
 
         </React.Fragment>
+
+        :
+
+        (
+            <React.Fragment>
+              <h1 className="text-center">You are not signed in</h1>
+            </React.Fragment>
+          )
     )
 }
 
-export default AuthenticatedView
+export default NotesPage

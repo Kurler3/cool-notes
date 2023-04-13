@@ -12,10 +12,12 @@ import { fetchLoggedInUser } from "./redux/slices/app.slice";
 import { fetchNotes } from "./redux/slices/notes.slice";
 import { AppDispatch } from "./redux/store";
 import NavBar from "./components/NavBar.component";
-import RegisterLoginModal from "./components/RegisterLoginModal.components";
 import AppLoader from "./components/AppLoader.component";
-import AuthenticatedView from "./components/AuthenticatedView.component";
-import { BrowserRouter } from "react-router-dom";
+import NotesPage from "./pages/NotesPage";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import PrivatePage from "./pages/PrivatePage";
+import NotFoundPage from "./pages/NotFoundPage";
+import RegisterLoginModal from "./components/RegisterLoginModal.components";
 
 function App() {
 
@@ -30,9 +32,9 @@ function App() {
   /////////////////////////
 
   const isAppLoading = useSelector(getIsAppLoading);
-  const showSignUpLoginModal = useSelector(getShowSignUpLoginModal);
   const user = useSelector(getAuthenticatedUser);
   const isLogin = useSelector(getIsLogin);
+  const showSignUpLoginModal = useSelector(getShowSignUpLoginModal);
 
   /////////////////////////
   // USE EFFECT ///////////
@@ -64,39 +66,55 @@ function App() {
         <NavBar
           user={user}
         />
-        
+
         {
           isAppLoading ? (
             <AppLoader />
           ) : (
             <Container className="p-4">
-              {
-                user ?
-                  (
-                    <AuthenticatedView />
-                  )
-                  :
-                  (
-                    <React.Fragment>
 
-                      <h1 className="text-center">You are not signed in</h1>
+              <Routes>
 
-                      {
-                        showSignUpLoginModal &&
-                        (
-                          <RegisterLoginModal
-                            isLogin={isLogin}
-                          />
-                        )
-                      }
-                    </React.Fragment>
-                  )
-              }
+                {/* HOME  */}
+                <Route
+                  path="/"
+                  element={
+                    <NotesPage
+                      user={user}
+                    />
+                  }
+                />
+
+                {/* PRIVACY */}
+                <Route
+                  path="/privacy"
+                  element={
+                    <PrivatePage />
+                  }
+                />
+
+                {/* ANY OTHER */}
+                <Route
+                  path="/*"
+                  element={
+                    <NotFoundPage />
+                  }
+                />
+              </Routes>
+
 
             </Container>
           )
         }
 
+        {
+          showSignUpLoginModal &&
+          (
+            <RegisterLoginModal
+              isLogin={isLogin}
+            />
+          )
+        }
 
       </React.Fragment>
     </BrowserRouter>
